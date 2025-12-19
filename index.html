@@ -3,179 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AOL Website Lead Magnet 1:1</title>
+    <title>Lead Magnet Form</title>
     <style>
+        /* Typeform-like Styling */
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #ffffff, #ffdab9);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            overflow: hidden;
         }
-        .form-container {
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 400px;
-            text-align: center;
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            padding: 20px;
+            text-align: left;
         }
-        .page {
-            display: none;
+
+        .slide {
+            display: none; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
-        .page.active {
+
+        .slide.active {
             display: block;
+            opacity: 1;
         }
+
         h2 {
+            font-size: 24px;
             margin-bottom: 20px;
-            color: #00008b; /* Dark blue from picture */
+            font-weight: 400;
         }
-        label {
+
+        .question-number {
+            color: #0445AF;
+            font-size: 14px;
+            margin-bottom: 10px;
             display: block;
-            margin: 10px 0;
-            cursor: pointer;
-            background: #e6f2ff; /* Light blue from options in picture */
-            padding: 10px;
-            border-radius: 4px;
         }
-        input[type="radio"] {
-            margin-right: 10px;
+
+        input[type="text"], 
+        input[type="email"], 
+        input[type="tel"], 
+        select {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 24px;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            background: transparent;
+            outline: none;
+            margin-bottom: 30px;
+            color: #0445AF;
         }
+
+        input::placeholder {
+            color: #ddd; 
+        }
+
         button {
-            background: #00008b; /* Dark blue from OK button */
+            background-color: #0445AF;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #033485;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 1px solid #0445AF;
+            color: #0445AF;
+            padding: 15px;
+            text-align: left;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 20px;
+            font-size: 18px;
         }
-        button:hover {
-            background: #000066;
+
+        .option-btn:hover {
+            background: #eef4ff;
         }
-        .required {
-            color: red;
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background-color: #0445AF;
+            width: 0%;
+            transition: width 0.3s;
         }
-        footer {
-            margin-top: 40px;
-            font-size: 12px;
-            color: #888;
+
+        /* Success Message */
+        #success-message {
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <div id="page1" class="page active"></div>
-        <div id="page2" class="page"></div>
-        <div id="page3" class="page"></div>
-        <div id="page4" class="page"></div>
-        <div id="page5" class="page"></div>
-        <div id="thankyou" class="page">
-            <h2>Thank you!</h2>
-            <p>Your responses have been submitted.</p>
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <form id="typeformClone" class="container">
+        
+        <div class="slide active" data-step="1">
+            <span class="question-number">1 &rarr;</span>
+            <h2>Let's start with your first name.</h2>
+            <input type="text" name="firstname" placeholder="Type your answer here..." required>
+            <br>
+            <button type="button" onclick="nextSlide(1)">OK &#10003;</button>
         </div>
-        <footer>Powered by Grok (mimicking Typeform)</footer>
-    </div>
+
+        <div class="slide" data-step="2">
+            <span class="question-number">2 &rarr;</span>
+            <h2>And your last name?</h2>
+            <input type="text" name="lastname" placeholder="Type your answer here..." required>
+            <br>
+            <button type="button" onclick="nextSlide(2)">OK &#10003;</button>
+        </div>
+
+        <div class="slide" data-step="3">
+            <span class="question-number">3 &rarr;</span>
+            <h2>What is your email address?</h2>
+            <input type="email" name="email" placeholder="name@example.com" required>
+            <br>
+            <button type="button" onclick="nextSlide(3)">OK &#10003;</button>
+        </div>
+
+        <div class="slide" data-step="4">
+            <span class="question-number">4 &rarr;</span>
+            <h2>Which of the following best describes your current challenge?</h2>
+            <div class="options">
+                <div class="option-btn" onclick="selectOption('challenge', 'Stress & Anxiety', 4)">A. Stress & Anxiety</div>
+                <div class="option-btn" onclick="selectOption('challenge', 'Sleep Issues', 4)">B. Sleep Issues</div>
+                <div class="option-btn" onclick="selectOption('challenge', 'Low Energy', 4)">C. Low Energy</div>
+                <div class="option-btn" onclick="selectOption('challenge', 'Just Curious', 4)">D. Just Curious</div>
+            </div>
+            <input type="hidden" name="challenge" id="challengeInput">
+        </div>
+
+        <div class="slide" data-step="5">
+            <span class="question-number">5 &rarr;</span>
+            <h2>Last step! What is your phone number?</h2>
+            <input type="tel" name="phone" placeholder="(555) 555-5555" required>
+            <br>
+            <button type="button" onclick="submitForm()">Submit</button>
+        </div>
+
+        <div class="slide" id="success-message">
+            <h2>All done! Thanks for your info.</h2>
+            <p>We will be in touch shortly.</p>
+        </div>
+
+    </form>
 
     <script>
-        // Editable questions/options for backend control - change here to update form
-        const formData = [
-            {
-                question: "What's your #1 goal with meditation right now? <span class='required'>*</span>",
-                name: "goal",
-                options: [
-                    "A. Stress less & Feel calmer",
-                    "B. Sleep better",
-                    "C. Focus & Productivity",
-                    "D. More Energy & Joy",
-                    "E. Explore deeper meaning/purpose"
-                ]
-            },
-            {
-                question: "How much do you want this change in your life? <span class='required'>*</span>",
-                name: "desire",
-                options: [
-                    "A. I need it badly, it's affecting my life",
-                    "B. It would be great, I'm ready to try",
-                    "C. I'm just curious for now"
-                ]
-            },
-            {
-                question: "What's your meditation experience? <span class='required'>*</span>",
-                name: "experience",
-                options: [
-                    "A. I've never tried",
-                    "B. I've tried apps but didn't stick",
-                    "C. I practice sometimes",
-                    "D. I'm regular but want to go deeper"
-                ]
-            },
-            {
-                question: "What kind of support would help you most? <span class='required'>*</span>",
-                name: "support",
-                options: [
-                    "A. A step-by-step start (easy & beginner friendly)",
-                    "B. Motivation & Community to stay consistent",
-                    "C. Science-backed guidance from real experts",
-                    "D. Deeper knowledge & advanced practices"
-                ]
-            },
-            {
-                question: "Would you like us to guide you 1:1 on how to reduce stress & feel calmer - totally free? <span class='required'>*</span>",
-                name: "guide",
-                options: [
-                    "A. Yes, I want my free call this week",
-                    "B. Yes, but next week is better",
-                    "C. Not yet, I'll keep exploring"
-                ]
-            }
-        ];
+        let currentStep = 1;
+        const totalSteps = 5;
+        const form = document.getElementById('typeformClone');
+        const formData = {};
 
-        let responses = {};
-        const scriptUrl = 'YOUR_APPS_SCRIPT_URL_HERE'; // Replace with your deployed Apps Script URL (instructions below)
+        // REPLACE THIS URL WITH YOUR GOOGLE SCRIPT WEB APP URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx03dGMyRm9BdtocLBhk1hiKQRSFJXViU8V7oAUPOoDvD1VjbHsrfsF6x_Z1cGTxbmr9A/exec';
 
-        // Dynamically build pages
-        formData.forEach((item, index) => {
-            const page = document.getElementById(`page${index + 1}`);
-            page.innerHTML = `<h2>${item.question}</h2>`;
-            item.options.forEach(opt => {
-                page.innerHTML += `<label><input type="radio" name="${item.name}" value="${opt}">${opt}</label>`;
-            });
-            page.innerHTML += `<button onclick="nextPage(${index + 1})">OK</button>`;
-        });
-
-        function nextPage(current) {
-            const currentPage = document.getElementById(`page${current}`);
-            const selected = currentPage.querySelector('input[type="radio"]:checked');
-            if (!selected) return alert('Please select an option.');
-
-            const name = selected.name;
-            responses[name] = selected.value;
-
-            currentPage.classList.remove('active');
-
-            if (current === 5) {
-                document.getElementById('thankyou').classList.add('active');
-                submitResponses();
-            } else {
-                document.getElementById(`page${current + 1}`).classList.add('active');
-            }
+        function updateProgress() {
+            const percentage = ((currentStep - 1) / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
         }
 
-        function submitResponses() {
-            fetch(scriptUrl, {
+        function nextSlide(step) {
+            // Validate input
+            const currentSlide = document.querySelector(`.slide[data-step="${step}"]`);
+            const input = currentSlide.querySelector('input');
+            
+            if (input && input.value.trim() === "") {
+                alert("Please fill out this field.");
+                return;
+            }
+
+            // Save data
+            if (input) {
+                formData[input.name] = input.value;
+            }
+
+            // Move to next
+            currentSlide.classList.remove('active');
+            currentStep++;
+            
+            const nextSlideDiv = document.querySelector(`.slide[data-step="${currentStep}"]`);
+            if (nextSlideDiv) {
+                nextSlideDiv.classList.add('active');
+            }
+            updateProgress();
+        }
+
+        function selectOption(name, value, step) {
+            document.getElementById(name + 'Input').value = value;
+            formData[name] = value;
+            nextSlide(step);
+        }
+
+        function submitForm() {
+            const currentSlide = document.querySelector(`.slide[data-step="${currentStep}"]`);
+            const input = currentSlide.querySelector('input');
+            if (input) {
+                formData[input.name] = input.value;
+            }
+
+            // Send to Google Sheets
+            const submitBtn = document.querySelector('button[onclick="submitForm()"]');
+            submitBtn.textContent = "Submitting...";
+            submitBtn.disabled = true;
+
+            fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors', // For cross-origin, but note: can't check response in JS
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(responses)
-            }).then(() => {
-                console.log('Submitted:', responses);
-            }).catch(err => {
-                alert('Submission failed: ' + err);
+                mode: 'no-cors', // Important for Google Sheets
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                document.querySelector(`.slide[data-step="${currentStep}"]`).classList.remove('active');
+                document.getElementById('success-message').classList.add('active');
+                document.getElementById('progressBar').style.width = '100%';
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert("Something went wrong. Please try again.");
+                submitBtn.textContent = "Submit";
+                submitBtn.disabled = false;
             });
         }
+        
+        // Allow Enter key to submit
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const activeSlide = document.querySelector('.slide.active');
+                const button = activeSlide.querySelector('button');
+                if (button) {
+                    button.click();
+                }
+            }
+        });
     </script>
+
 </body>
 </html>
