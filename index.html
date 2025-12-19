@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOL Website Lead Magnet 1:1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #ffffff, #ffdab9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #00008b; /* Dark blue from picture */
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+            cursor: pointer;
+            background: #e6f2ff; /* Light blue from options in picture */
+            padding: 10px;
+            border-radius: 4px;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            background: #00008b; /* Dark blue from OK button */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #000066;
+        }
+        .required {
+            color: red;
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div id="page1" class="page active"></div>
+        <div id="page2" class="page"></div>
+        <div id="page3" class="page"></div>
+        <div id="page4" class="page"></div>
+        <div id="page5" class="page"></div>
+        <div id="thankyou" class="page">
+            <h2>Thank you!</h2>
+            <p>Your responses have been submitted.</p>
+        </div>
+        <footer>Powered by Grok (mimicking Typeform)</footer>
+    </div>
+
+    <script>
+        // Editable questions/options for backend control - change here to update form
+        const formData = [
+            {
+                question: "What's your #1 goal with meditation right now? <span class='required'>*</span>",
+                name: "goal",
+                options: [
+                    "A. Stress less & Feel calmer",
+                    "B. Sleep better",
+                    "C. Focus & Productivity",
+                    "D. More Energy & Joy",
+                    "E. Explore deeper meaning/purpose"
+                ]
+            },
+            {
+                question: "How much do you want this change in your life? <span class='required'>*</span>",
+                name: "desire",
+                options: [
+                    "A. I need it badly, it's affecting my life",
+                    "B. It would be great, I'm ready to try",
+                    "C. I'm just curious for now"
+                ]
+            },
+            {
+                question: "What's your meditation experience? <span class='required'>*</span>",
+                name: "experience",
+                options: [
+                    "A. I've never tried",
+                    "B. I've tried apps but didn't stick",
+                    "C. I practice sometimes",
+                    "D. I'm regular but want to go deeper"
+                ]
+            },
+            {
+                question: "What kind of support would help you most? <span class='required'>*</span>",
+                name: "support",
+                options: [
+                    "A. A step-by-step start (easy & beginner friendly)",
+                    "B. Motivation & Community to stay consistent",
+                    "C. Science-backed guidance from real experts",
+                    "D. Deeper knowledge & advanced practices"
+                ]
+            },
+            {
+                question: "Would you like us to guide you 1:1 on how to reduce stress & feel calmer - totally free? <span class='required'>*</span>",
+                name: "guide",
+                options: [
+                    "A. Yes, I want my free call this week",
+                    "B. Yes, but next week is better",
+                    "C. Not yet, I'll keep exploring"
+                ]
+            }
+        ];
+
+        let responses = {};
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbxtp2nTLEsgUpfHcVv18D5w7rU8qiqLfIMyIeZB99EmLNq_51iq5XwftRRhMrYwPbSYoQ/exec'; // Replace with your deployed Apps Script URL (instructions below)
+
+        // Dynamically build pages
+        formData.forEach((item, index) => {
+            const page = document.getElementById(`page${index + 1}`);
+            page.innerHTML = `<h2>${item.question}</h2>`;
+            item.options.forEach(opt => {
+                page.innerHTML += `<label><input type="radio" name="${item.name}" value="${opt}">${opt}</label>`;
+            });
+            page.innerHTML += `<button onclick="nextPage(${index + 1})">OK</button>`;
+        });
+
+        function nextPage(current) {
+            const currentPage = document.getElementById(`page${current}`);
+            const selected = currentPage.querySelector('input[type="radio"]:checked');
+            if (!selected) return alert('Please select an option.');
+
+            const name = selected.name;
+            responses[name] = selected.value;
+
+            currentPage.classList.remove('active');
+
+            if (current === 5) {
+                document.getElementById('thankyou').classList.add('active');
+                submitResponses();
+            } else {
+                document.getElementById(`page${current + 1}`).classList.add('active');
+            }
+        }
+
+        function submitResponses() {
+            fetch(scriptUrl, {
+                method: 'POST',
+                mode: 'no-cors', // For cross-origin, but note: can't check response in JS
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(responses)
+            }).then(() => {
+                console.log('Submitted:', responses);
+            }).catch(err => {
+                alert('Submission failed: ' + err);
+            });
+        }
+    </script>
+</body>
+</html>
